@@ -41,7 +41,9 @@ export class BlogsController {
 
       const blogs = await this.blogService.getBlogs(queries);
 
-      this.cacheManager.set(key, blogs, 100000);
+      // * TTL in milliseconds
+      const TTL = 5 * 60 * 1000;
+      this.cacheManager.set(key, blogs, TTL);
       return {
         nrOfBlogs: blogs.length,
         blogs,
