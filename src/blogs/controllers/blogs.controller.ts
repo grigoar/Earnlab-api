@@ -27,24 +27,30 @@ export class BlogsController {
   })
   @Get()
   async getBlogs(@Query() queries: GetAllBlogsQueries) {
-    const key = `blogs-${queries.page}-${queries.rowsPerPage}-${queries.order}`;
+    try {
+      const key = `blogs-${queries.page}-${queries.rowsPerPage}-${queries.order}`;
 
-    const blogsCache: Blog[] = await this.cacheManager.get(key);
-    if (blogsCache) {
-      console.log('Returning from cache...');
+      const blogsCache: Blog[] = await this.cacheManager.get(key);
+      if (blogsCache) {
+        console.log('Returning from cache...');
+        return {
+          nrOfBlogs: blogsCache.length,
+          blogs: blogsCache,
+        };
+      }
+
+      const blogs = await this.blogService.getBlogs(queries);
+
+      this.cacheManager.set(key, blogs, 100000);
       return {
-        nrOfBlogs: blogsCache.length,
-        blogs: blogsCache,
+        nrOfBlogs: blogs.length,
+        blogs,
+      };
+    } catch (e) {
+      return {
+        message: e.message,
       };
     }
-
-    const blogs = await this.blogService.getBlogs(queries);
-
-    this.cacheManager.set(key, blogs, 100000);
-    return {
-      nrOfBlogs: blogs.length,
-      blogs,
-    };
   }
 
   @ApiOperation({
@@ -53,7 +59,13 @@ export class BlogsController {
   })
   @Get(':id')
   async getBlog(@Param('id') id: string) {
-    return await this.blogService.getBlog(id);
+    try {
+      return await this.blogService.getBlog(id);
+    } catch (e) {
+      return {
+        message: e.message,
+      };
+    }
   }
 
   @ApiOperation({
@@ -66,13 +78,19 @@ export class BlogsController {
   })
   @Post()
   async createBlog(@Body() blog: CreateBlogDto) {
-    await this.blogService.createBlog({
-      title: blog.title,
-      body: blog.body,
-    });
+    try {
+      await this.blogService.createBlog({
+        title: blog.title,
+        body: blog.body,
+      });
 
-    return {
-      message: 'Blog Created Successfully',
-    };
+      return {
+        message: 'Blog Created Successfully',
+      };
+    } catch (e) {
+      return {
+        message: e.message,
+      };
+    }
   }
 }

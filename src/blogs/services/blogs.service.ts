@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BLogEntity } from 'src/database/entities/blog.entity';
+import { BLogEntity } from '../../database/entities/blog.entity';
 import { Repository } from 'typeorm';
 import { CreateBlog } from '../types/create-blog.type';
 import { GetAllBlogsQueries } from '../types/get-all-blogs-queries.types';
@@ -12,12 +12,19 @@ export class BlogsService {
     private blogRepository: Repository<BLogEntity>,
   ) {}
 
-  async getBlogs(queries: GetAllBlogsQueries) {
+  async getBlogs(queries?: GetAllBlogsQueries) {
     try {
-      // Return all the blogs paginated AND cached
+      // Return all the blogs paginated
       const rowsPerPage = parseInt(queries.rowsPerPage, 10) || 10;
       const page = parseInt(queries.page, 10) || 1;
       const order = queries.order === 'ASC' ? 'ASC' : 'DESC';
+
+      // const blogs = this.blogRepository
+      //   .createQueryBuilder('blog')
+      //   .orderBy('blog.id', order)
+      //   .take(rowsPerPage)
+      //   .skip((page - 1) * rowsPerPage)
+      //   .getMany();
 
       const blogs = await this.blogRepository.find({
         order: { id: order },
@@ -27,7 +34,7 @@ export class BlogsService {
 
       return blogs;
     } catch (e) {
-      console.log(e);
+      throw e;
     }
   }
 
@@ -37,7 +44,7 @@ export class BlogsService {
         where: { id },
       });
     } catch (e) {
-      console.log(e);
+      throw e;
     }
   }
 
@@ -45,7 +52,7 @@ export class BlogsService {
     try {
       return await this.blogRepository.save(blog);
     } catch (e) {
-      console.log(e);
+      throw e;
     }
   }
 }

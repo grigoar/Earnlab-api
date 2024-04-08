@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BlogsController } from './controllers/blogs.controller';
 import { BlogsService } from './services/blogs.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BLogEntity } from 'src/database/entities/blog.entity';
+import { BLogEntity } from '../database/entities/blog.entity';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 
