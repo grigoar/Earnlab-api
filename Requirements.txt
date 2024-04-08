@@ -1,0 +1,33 @@
+I can give you a little run down on our stack. For our backend we are using NestJs with TypeORM/Postgres and Redis. For our backend we are currently using Nuxt 2. I would like to give you a little take home task that shouldn’t take more than three days to complete. After you are done, please upload the code to a public Github repository.
+Objective: Develop a simplified RESTful API service for managing blog posts using NestJS, TypeORM/Postgres, and Redis. The focus will be on creating and reading blog posts, with Redis caching to enhance read performance.
+
+Requirements:
+1. API Endpoints:
+
+- An endpoint to create a new blog post.
+- An endpoint to retrieve a list of all blog posts, implementing basic pagination.
+- An endpoint to retrieve a single blog post by ID.
+
+2. Tech Stack:
+
+- Framework: NestJS.
+- Database: Use TypeORM with PostgreSQL for storing blog posts.
+- Caching: Use Redis to cache the results of the endpoint that retrieves a list of blog posts for a short duration (e.g., 5 minutes).
+
+3. Data Model:
+
+- Post: Should include at least a title, body, and timestamps (created and updated).
+
+4. Validation and Security:
+
+- Implement input validation for creating a blog post to ensure data integrity.
+- Ensure the application is secure against SQL injection attacks through proper use of TypeORM.
+
+5. Testing:
+
+- Provide unit tests for your service layer.
+- Include at least one integration test for your endpoints.
+
+6. Documentation:
+
+- Briefly document your API endpoints.
